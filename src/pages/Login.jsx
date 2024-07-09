@@ -1,4 +1,23 @@
+import { useForm } from "react-hook-form"
+import { useDispatch } from "react-redux"
+
+import { setCredentials } from "../redux/slice/authSlice"
+import { useLoginMutation } from "../redux/slice/authApiSlice"
+
 const Login = () => {
+  const { handleSubmit, register } = useForm()
+  const [login, { isLoading, isError }] = useLoginMutation()
+  const dispatch = useDispatch()
+
+  const onSubmit = async (credentials) => {
+    const res = await login({
+      email: credentials.email,
+      password: credentials.password,
+    })
+    console.log(res)
+    dispatch(setCredentials({ accessToken: res.data.token }))
+  }
+
   return (
     <div className="flex flex-col justify-center flex-1 min-h-full px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -13,7 +32,7 @@ const Login = () => {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form action="#" method="POST" className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
             <label
               htmlFor="email"
@@ -23,11 +42,12 @@ const Login = () => {
             </label>
             <div className="mt-2">
               <input
+                required
                 id="email"
                 name="email"
                 type="email"
-                required
                 autoComplete="email"
+                {...register("email", { required: true })}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -52,10 +72,11 @@ const Login = () => {
             </div>
             <div className="mt-2">
               <input
+                required
                 id="password"
                 name="password"
                 type="password"
-                required
+                {...register("password", { required: true })}
                 autoComplete="current-password"
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />

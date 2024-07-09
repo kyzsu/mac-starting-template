@@ -7,7 +7,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
         url: "/...",
         method: "POST",
         body: {
-          usernameOrEmailAddress: email,
+          emailOrUsername: email,
           password: password,
         },
       }),
